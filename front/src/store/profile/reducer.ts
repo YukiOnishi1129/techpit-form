@@ -8,6 +8,12 @@ const init: Profile = {
   description: '',
   birthday: '',
   gender: '',
+  address: {
+    postalcode: '',
+    prefecture: '',
+    city: '',
+    restAddress: '',
+  },
 };
 
 const profileReducer = reducerWithInitialState(init)
@@ -17,6 +23,10 @@ const profileReducer = reducerWithInitialState(init)
   .case(profileActions.setProfile, (state, payload) => ({
     ...state, //直前のprofileというstate
     ...payload, // アクションから渡ってきたpayload
+  }))
+  .case(profileActions.setAddress, (state, payload) => ({
+    ...state,
+    address: { ...state.address, ...payload },
   }));
 //   redux では直接値を更新してはいけない
 
