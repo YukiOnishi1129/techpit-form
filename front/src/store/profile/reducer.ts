@@ -27,6 +27,10 @@ const profileReducer = reducerWithInitialState(init)
   .case(profileActions.setAddress, (state, payload) => ({
     ...state,
     address: { ...state.address, ...payload },
+  }))
+  .case(profileActions.searchAddress.done, (state, payload) => ({
+    ...state,
+    address: { ...state.address, ...payload.result },
   }));
 //   redux では直接値を更新してはいけない
 
