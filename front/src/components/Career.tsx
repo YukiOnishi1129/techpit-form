@@ -11,6 +11,7 @@ import { RootState } from '../domain/entity/rootState';
 import { Career as ICareer } from '../domain//entity/career';
 import profileActions from '../store/profile/actions';
 import { PROFILE } from '../domain/services/profile';
+import { exitEmptyCareers } from '../domain/services/career';
 
 import useStyles from './styles';
 
@@ -19,14 +20,23 @@ const Career = () => {
 
   const dispatch = useDispatch();
   const careers = useSelector((state: RootState) => state.profile.careers);
+  const isAbleToAddCareer = exitEmptyCareers(careers);
 
+  //   inputフォーム内の値を記入するために更新する
   const handleChange = (member: Partial<ICareer>, i: number) => {
     dispatch(profileActions.setCareer({ career: member, index: i }));
   };
 
+  //   新しい職歴を追加する
   const handleAddCareer = () => {
     dispatch(profileActions.addCareer({}));
   };
+
+  //   職歴を削除する
+  const handleDeleteCareer = (i: number) => {
+    dispatch(profileActions.deleteCareer(i));
+  };
+
   return (
     <>
       {careers.map((c, i) => (
@@ -83,6 +93,15 @@ const Career = () => {
               </Grid>
             </Grid>
           </div>
+          <Button
+            className={classes.button}
+            onClick={() => handleDeleteCareer(i)}
+            fullWidth
+            variant="outlined"
+            color="secondary"
+          >
+            職歴 {i + 1} を削除
+          </Button>
         </Fragment>
       ))}
       <Button
@@ -90,6 +109,7 @@ const Career = () => {
         onClick={handleAddCareer}
         fullWidth
         variant="outlined"
+        disabled={isAbleToAddCareer}
       >
         職歴を追加
       </Button>
