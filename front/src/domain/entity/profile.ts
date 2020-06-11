@@ -1,5 +1,6 @@
 import { Gender } from './gender';
 import { Address } from './address';
+import { Career } from './career';
 
 // Profileオブジェクトのデータ構造を定義
 export type Profile = {
@@ -8,4 +9,5 @@ export type Profile = {
   birthday: string;
   gender: Gender;
   address: Address;
+  careers: Career[];
 };
