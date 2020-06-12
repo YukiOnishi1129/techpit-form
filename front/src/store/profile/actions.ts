@@ -1,8 +1,8 @@
 import actionCreatorFactory from 'typescript-fsa';
 import { Profile } from '../../domain/entity/profile';
 import { Address } from '../../domain/entity/address';
-
 import { Career } from '../../domain/entity/career';
+import { College } from '../../domain/entity/college';
 
 const actionCreator = actionCreatorFactory();
 
@@ -26,6 +26,7 @@ const profileActions = {
   ),
   deleteCareer: actionCreator<number>('DELETE_CAREER'),
   addCareer: actionCreator<{}>('ADD_CAREER'),
+  setCollege: actionCreator<Partial<College>>('SET_COLLEGE'),
 };
 
 export default profileActions;

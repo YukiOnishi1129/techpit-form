@@ -17,6 +17,11 @@ const init: Profile = {
     restAddress: '',
   },
   careers: [],
+  college: {
+    name: '',
+    faculty: '',
+    department: '',
+  },
 };
 
 // 会社情報の初期値
@@ -59,6 +64,10 @@ const profileReducer = reducerWithInitialState(init)
   .case(profileActions.addCareer, (state) => ({
     ...state,
     careers: [...state.careers, initCareer],
+  }))
+  .case(profileActions.setCollege, (state, payload) => ({
+    ...state,
+    college: { ...state.college, ...payload },
   }));
 //   redux では直接値を更新してはいけない
 
