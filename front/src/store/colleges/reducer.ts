@@ -1,15 +1,17 @@
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import collegeActions from './actions';
+import collegesActions from './actions';
 import { Colleges } from '../../domain/entity/college';
 
-const init: Colleges = { search: '' };
+const init: Colleges = { result: [], search: '' };
 
-const collegeReducer = reducerWithInitialState(init).case(
-  collegeActions.setSearchWord,
-  (state, payload) => ({
+const collegeReducer = reducerWithInitialState(init)
+  .case(collegesActions.setSearchWord, (state, payload) => ({
     ...state,
     search: payload,
-  })
-);
+  }))
+  .case(collegesActions.searchCollege.done, (state, payload) => ({
+    ...state,
+    result: payload.result,
+  }));
 
 export default collegeReducer;
