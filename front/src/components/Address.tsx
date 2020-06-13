@@ -9,6 +9,9 @@ import { Address as IAddress } from '../domain/entity/address';
 import profileActions from '../store/profile/actions';
 import { isPostalcode } from '../domain/services/address';
 import { searchAddressFormPostalcode } from '../store/profile/effects';
+import { Profile } from '../domain/entity/profile';
+import { calculateValidation } from '../domain/services/validation';
+import validationActions from '../store/validation/actions';
 
 import useStyles from './styles';
 
@@ -21,6 +24,8 @@ const Address = () => {
   // storeの住所情報を部分的に更新する
   const handleAddresChange = (member: Partial<IAddress>) => {
     dispatch(profileActions.setAddress(member));
+    // バリデーション再チェック
+    recalculateValidation({ address: { ...profile.address, ...member } });
   };
 
   // storeの郵便番号情報を更新し、その郵便番号を元にAPI通信にて住所情報を取得
@@ -29,6 +34,23 @@ const Address = () => {
     dispatch(profileActions.setAddress({ postalcode: code }));
     //API通信処理
     dispatch(searchAddressFormPostalcode(code));
+
+    // バリデーション再チェック
+    recalculateValidation({
+      address: { ...profile.address, postalcode: code },
+    });
+  };
+
+  // バリデーション再チェック
+  const recalculateValidation = (member: Partial<Profile>) => {
+    if (!validation.isStartValidation) return;
+
+    const newProfile = {
+      ...profile,
+      ...member,
+    };
+    const message = calculateValidation(newProfile);
+    dispatch(validationActions.setValidation(message));
   };
 
   return (

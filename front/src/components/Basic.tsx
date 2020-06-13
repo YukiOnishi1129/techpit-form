@@ -17,6 +17,8 @@ import { RootState } from '../domain/entity/rootState';
 
 import { Profile } from '../domain/entity/profile';
 import { Gender } from '../domain/entity/gender';
+import { calculateValidation } from '../domain/services/validation';
+import validationActions from '../store/validation/actions';
 
 import profileActions from '../store/profile/actions';
 
@@ -30,6 +32,29 @@ const Basic = () => {
   //   Profileを部分的に更新する
   const handleChange = (member: Partial<Profile>) => {
     dispatch(profileActions.setProfile(member));
+    recalculateValidation(member);
+  };
+
+  // バリデーションを再計算
+  const recalculateValidation = (member: Partial<Profile>) => {
+    // isStartValidationがtrue (保存ボタンが押されるまで、再計算は実施されない)
+    if (!validation.isStartValidation) return;
+
+    // storeのprofileを直接dispatchに送ると更新されない
+    // recalculateValidationの中で参照できるのは更新前のprofileだけ
+
+    // 新しい状態を定義してそれを元にstoreを更新する必要あり
+
+    // profileにmemberを更新する
+    // スプレッド構文について
+    // https://qiita.com/akisx/items/682a4283c13fe336c547
+    const newProfile = {
+      ...profile,
+      ...member,
+    };
+    // const message = calculateValidation(profile); // これだと更新されない
+    const message = calculateValidation(newProfile); // newProfileのように新しい状態を再定義する必要あり
+    dispatch(validationActions.setValidation(message));
   };
 
   return (

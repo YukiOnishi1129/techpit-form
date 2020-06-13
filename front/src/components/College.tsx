@@ -17,6 +17,8 @@ import { searchColleges } from '../store/colleges/effects';
 
 import { College as ICollege } from '../domain/entity/college';
 import profileActions from '../store/profile/actions';
+import { calculateValidation } from '../domain/services/validation';
+import validationActions from '../store/validation/actions';
 
 import useStyles from './styles';
 
@@ -54,6 +56,7 @@ const College = () => {
   //storeの大学情報を更新
   const handleCollegeChange = (member: Partial<ICollege>) => {
     dispatch(profileActions.setCollege(member));
+    recalculateValidation(member);
   };
 
   // storeの大学情報、検索ワード、API取得結果をリセット
@@ -61,6 +64,17 @@ const College = () => {
     handleCollegeChange({ name: '', faculty: '', department: '' });
     dispatch(collegesActions.setSearchWord(''));
     dispatch(collegesActions.searchCollege.done({ result: [], params: {} }));
+  };
+
+  // バリデーション再チェック
+  const recalculateValidation = (member: Partial<ICollege>) => {
+    if (!validation.isStartValidation) return;
+    const newProfile = {
+      ...profile,
+      college: { ...profile.college, ...member },
+    };
+    const message = calculateValidation(newProfile);
+    dispatch(validationActions.setValidation(message));
   };
 
   return (
