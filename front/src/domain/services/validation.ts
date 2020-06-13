@@ -34,6 +34,26 @@ export const calculateValidation = (profile: Profile) => {
   return message;
 };
 
+// オブジェクトの要素をフラットなstringの配列にし、それが全て空であるかを判定する
+export const isValid = (message: Validation) => {
+  // オブジェクトの要素をstringのフラットな配列に返す
+  //   Object.values：オブジェクトの値のみ、文字列の配列として取り出す
+  const falttenValues = Object.values(message)
+    .map(extractValues)
+    // careerが配列なので、flat(2)で2階層まで展開する
+    .flat(2) as string[];
+
+  // 配列が全て空であればtrue
+  return falttenValues.every((fv) => !fv);
+};
+
+// 再帰的にObjectを配列に
+// 引数がstringならreturn
+// string以外(オブジェクト)なら、再度extractValuesを呼び出して、stringのプロパティに当たるまで繰り返す
+const extractValues = (obj: any): any[] | string => {
+  if (typeof obj === 'string') return obj;
+  return Object.values(obj).map(extractValues);
+};
 // 必須項目
 const emptyValidation = (target: string, col: string) =>
   isEmpty(target) ? `${col}を入力してください` : '';

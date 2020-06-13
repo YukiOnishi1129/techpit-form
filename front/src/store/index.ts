@@ -4,12 +4,14 @@ import profileReducer from './profile/reducer';
 import collegeReducer from './colleges/reducer';
 import validationReducer from './validation/reducer';
 import { RootState } from '../domain/entity/rootState';
+import alertReducer from './alert/reducer';
 
 const store = createStore(
   combineReducers<RootState>({
     profile: profileReducer,
     colleges: collegeReducer,
     validation: validationReducer,
+    alert: alertReducer,
   }),
   compose(
     applyMiddleware(thunk),
