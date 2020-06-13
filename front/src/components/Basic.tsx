@@ -7,6 +7,7 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  FormHelperText,
 } from '@material-ui/core';
 
 import useStyles from './styles';
@@ -23,6 +24,7 @@ const Basic = () => {
   // useDispatch: dispatchをする関数を作成するhooks
   const dispatch = useDispatch();
   const profile = useSelector((state: RootState) => state.profile);
+  const validation = useSelector((state: RootState) => state.validation);
   const classes = useStyles();
 
   //   Profileを部分的に更新する
@@ -36,19 +38,28 @@ const Basic = () => {
         fullWidth
         className={classes.formField}
         label={PROFILE.NAME}
+        required //必須項目
+        error={!!validation.message.name} // !!: 項目内エラー文字列が空かどうかの判定
+        helperText={validation.message.name} // エラーメッセージを表示
         value={profile.name}
         onChange={(e) => handleChange({ name: e.target.value })}
       />
       <TextField
         fullWidth
         multiline
+        error={!!validation.message.description}
+        helperText={validation.message.description}
         className={classes.formField}
         rows={5}
         label={PROFILE.DESCRIPTION}
         value={profile.description}
         onChange={(e) => handleChange({ description: e.target.value })}
       />
-      <FormControl className="classes.formField">
+      <FormControl
+        error={!!validation.message.gender}
+        required
+        className="classes.formField"
+      >
         <FormLabel>{PROFILE.GENDER}</FormLabel>
         <RadioGroup
           value={profile.gender}
@@ -65,9 +76,13 @@ const Basic = () => {
             control={<Radio color="primary" />}
           />
         </RadioGroup>
+        <FormHelperText>{validation.message.gender}</FormHelperText>
       </FormControl>
       <TextField
         fullWidth
+        required
+        error={!!validation.message.birthday}
+        helperText={validation.message.birthday}
         className={classes.formField}
         label={PROFILE.BIRTHDAY}
         type="date"
