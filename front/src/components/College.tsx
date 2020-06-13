@@ -8,6 +8,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormHelperText,
 } from '@material-ui/core';
 import { PROFILE } from '../domain/services/profile';
 import { RootState } from '../domain/entity/rootState';
@@ -25,6 +26,7 @@ const College = () => {
   //   useSelector: 必要な情報を参照する
   const colleges = useSelector((state: RootState) => state.colleges);
   const profile = useSelector((state: RootState) => state.profile);
+  const validation = useSelector((state: RootState) => state.validation);
   const classes = useStyles();
 
   // 大学名
@@ -108,7 +110,11 @@ const College = () => {
             value={profile.college.name}
             disabled
           />
-          <FormControl fullWidth className={classes.formField}>
+          <FormControl
+            error={!!validation.message.college.faculty}
+            fullWidth
+            className={classes.formField}
+          >
             <InputLabel>{PROFILE.COLLEGE.FACULTY}</InputLabel>
             <Select
               value={profile.college.faculty}
@@ -126,6 +132,9 @@ const College = () => {
                 </MenuItem>
               ))}
             </Select>
+            <FormHelperText>
+              {validation.message.college.faculty}
+            </FormHelperText>
           </FormControl>
           {/* 学科名がある場合、学科名のUIを表示 */}
           {currentFaculty?.department.length > 0 && (
